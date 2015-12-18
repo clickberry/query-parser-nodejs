@@ -79,6 +79,7 @@ describe('Logic operations', function () {
 
 
         var filterStr = '(exp1 or exp2) and (exp3 or exp 4)';
+        console.log(filterStr);
 
         var regExpOr = /[^(\s]* or [^)\s]*/g;
         var res1 = filterStr.match(regExpOr);
@@ -92,11 +93,24 @@ describe('Logic operations', function () {
         var regExpBracket = /\(([^)]+)\)/g;
         var res3;
 
+        var brackets=[];
+        var count=0;
         while((res3=regExpBracket.exec(filterStr))!=null){
             console.log(res3);
+            var bracket=res3[0];
+            var exp=res3[1];
+
+            brackets.push(exp);
+            //filterStr.replace(new RegExp('\\('+exp+'\\)', 'g'), count.toString());
+            //count++;
         }
 
+        brackets.forEach(function(exp, index){
+            filterStr=filterStr.replace('('+exp+')', index);
+        });
 
+        console.log(brackets);
+        console.log(filterStr);
 
 
         //assert.equal(value.and[1], expression1);
