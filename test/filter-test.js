@@ -77,6 +77,7 @@ describe('Logic operations', function () {
         //console.log(filterStr);
         //console.log(JSON.stringify(value));
 
+
         var filterStr = '(exp1 or exp2) and (exp3 or exp 4)';
 
         var regExpOr = /[^(\s]* or [^)\s]*/g;
