@@ -1,0 +1,29 @@
+{
+  "name": "clickberry-query-parser",
+  "version": "0.0.0",
+  "main": "app.js",
+  "description": "OData alike query parser middleware on Node.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "Konstantin Altuhov",
+  "keywords": [
+    "clickberry",
+    "webservices",
+    "node.js",
+    "query",
+    "api",
+    "parser"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/clickberry/query-parser-nodejs"
+  },
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/clickberry/query-parser-nodejs/issues"
+  },
+  "dependencies": {
+    "mocha": "^2.3.4"
+  }
+}
