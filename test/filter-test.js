@@ -18,9 +18,7 @@ describe('Logic operations', function () {
         console.log(filterStr);
         console.log(value);
 
-        assert.equal(value.exp, expression1);
-        assert.equal(value.and, undefined);
-        assert.equal(value.or, undefined);
+        assert.equal(value, expression1);
     });
 
     it('AND', function () {
@@ -31,7 +29,6 @@ describe('Logic operations', function () {
 
         assert.equal(value.and[0], expression1);
         assert.equal(value.and[1], expression2);
-        assert.equal(value.exp, undefined);
         assert.equal(value.or, undefined);
     });
 
@@ -43,7 +40,6 @@ describe('Logic operations', function () {
 
         assert.equal(value.or[0], expression1);
         assert.equal(value.or[1], expression2);
-        assert.equal(value.exp, undefined);
         assert.equal(value.and, undefined);
     });
 
@@ -72,50 +68,119 @@ describe('Logic operations', function () {
     });
 
     it('AND & (OR)', function () {
-        //var filterStr = expression1 + ' and ' + expression2 + ' or ' + expression3+'';
-        //var value = filter.getLogics(filterStr);
-        //console.log(filterStr);
-        //console.log(JSON.stringify(value));
+        var filterStr = expression1 + ' and (' + expression2 + ' or ' + expression3 + ')';
+        var value = filter.getLogics(filterStr);
 
+        console.log(filterStr);
+        console.log(JSON.stringify(value));
 
-        var filterStr = '(exp1 or exp2) and (exp3 or exp 4)';
+        assert.equal(value.and[0], expression1);
+        assert.equal(value.and[1].or[0], expression2);
+        assert.equal(value.and[1].or[1], expression3);
+    });
+
+    it('(OR) AND & OR (OR & AND)', function () {
+        var filterStr = '(exp1 or exp2) and exp3 or (exp4 or exp5 and exp6)'
+        var value = filter.getLogics(filterStr);
+
+        console.log(filterStr);
+        console.log(JSON.stringify(value));
+
+        assert.equal(value.or[0].and[0].or[0], 'exp1');
+        assert.equal(value.or[0].and[0].or[1], 'exp2');
+        assert.equal(value.or[0].and[1], 'exp3');
+        assert.equal(value.or[1].or[0], 'exp4');
+        assert.equal(value.or[1].or[1].and[0], 'exp5');
+        assert.equal(value.or[1].or[1].and[1], 'exp6');
+    });
+
+    it('(OR) OR & OR (OR & AND)', function () {
+        var filterStr = '(exp1 or exp2) or exp3 or (exp4 or exp5 and exp6)'
+        var value = filter.getLogics(filterStr);
+
+        console.log(filterStr);
+        console.log(JSON.stringify(value));
+
+        assert.equal(value.or[0].or[0], 'exp1');
+        assert.equal(value.or[0].or[1], 'exp2');
+        assert.equal(value.or[1], 'exp3');
+        assert.equal(value.or[2].or[0], 'exp4');
+        assert.equal(value.or[2].or[1].and[0], 'exp5');
+        assert.equal(value.or[2].or[1].and[1], 'exp6');
+    });
+
+    it('(OR) AND & AND (OR & AND)', function () {
+        var filterStr = '(exp1 or exp2) and exp3 and (exp4 or exp5 and exp6)'
+        var value = filter.getLogics(filterStr);
+
+        console.log(filterStr);
+        console.log(JSON.stringify(value));
+
+        assert.equal(value.and[0].or[0], 'exp1');
+        assert.equal(value.and[0].or[1], 'exp2');
+        assert.equal(value.and[1], 'exp3');
+        assert.equal(value.and[2].or[0], 'exp4');
+        assert.equal(value.and[2].or[1].and[0], 'exp5');
+        assert.equal(value.and[2].or[1].and[1], 'exp6');
+    });
+
+    it('Error (AND (OR))', function () {
+        var filterStr = '(exp1 and (exp2 or exp3))'
+        var value = filter.getLogics(filterStr);
+
         console.log(filterStr);
 
-        var regExpOr = /[^(\s]* or [^)\s]*/g;
-        var res1 = filterStr.match(regExpOr);
-        console.log(res1);
+        assert.equal(value, null);
+    });
 
-        var regExpAnd = /[^(\s]* and [^)\s]*/g;
-        var res2 = filterStr.match(regExpAnd);
-        console.log(res2);
+    it('Error AND ((OR))', function () {
+        var filterStr = 'exp1 and ((exp2 or exp3))'
+        var value = filter.getLogics(filterStr);
 
-        //var regExpBracket = /\([^\s]* or [^\s]*\)+/g;
-        var regExpBracket = /\(([^)]+)\)/g;
-        var res3;
+        console.log(filterStr);
 
-        var brackets=[];
-        var count=0;
-        while((res3=regExpBracket.exec(filterStr))!=null){
-            console.log(res3);
-            var bracket=res3[0];
-            var exp=res3[1];
+        assert.equal(value, null);
+    });
 
+    it('Error AND (OR))', function () {
+        var filterStr = 'exp1 and (exp2 or exp3))'
+        var value = filter.getLogics(filterStr);
+
+        console.log(filterStr);
+
+        assert.equal(value, null);
+    });
+
+    it('Error', function () {
+        var filterStr = "aa lt '(str)jj'"
+        //var value = filter.getLogics(filterStr);
+
+        console.log(filterStr);
+        //console.log(value);
+
+
+
+
+        var filterStr2 = "aa lt '(str)' and (bb lt '(s''tr)' or bb gt 's (s)j') and cc lt '(str)jj'"
+        //var value2 = filter.getLogics(filterStr2);
+
+        console.log(filterStr2);
+        //console.log(value2);
+
+        //var regExp=/((?:^|\(|\s)\w+\s(gt|lt)\s\w+(?:$|\)|\s))/g;
+        //var regExp=/(\w+\s(?:gt|lt)\s(?:'[^']*'))/g;  //   |\d.?\d
+        var regExp=/(\w+\s(?:gt|lt)\s'.*(?='\sand|'\sor)')/g;
+
+        var res;
+        var brackets = [];
+        while ((res = regExp.exec(filterStr2)) != null) {
+            var exp = res[1];
+
+            console.log(res);
             brackets.push(exp);
-            //filterStr.replace(new RegExp('\\('+exp+'\\)', 'g'), count.toString());
-            //count++;
         }
 
-        brackets.forEach(function(exp, index){
-            filterStr=filterStr.replace('('+exp+')', index);
-        });
-
-        console.log(brackets);
-        console.log(filterStr);
-
-
-        //assert.equal(value.and[1], expression1);
-        //assert.equal(value.and[1].or[0], expression2);
-        //assert.equal(value.and[1].or[1], expression3);
-
+       console.log(brackets);
+        //assert.equal(value, filterStr);
     });
 });
