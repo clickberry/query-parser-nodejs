@@ -151,36 +151,56 @@ describe('Logic operations', function () {
         assert.equal(value, null);
     });
 
-    it('Error', function () {
-        var filterStr = "aa lt '(str)jj'"
-        //var value = filter.getLogics(filterStr);
+    it('***Temporary***', function () {
+        var filterStr = "aa lt '(str)jj'";
 
         console.log(filterStr);
-        //console.log(value);
 
-
-
-
-        var filterStr2 = "aa lt '(str)' and (bb lt '(s''tr)' or bb gt 's (s)j') and cc lt '(str)jj'"
-        //var value2 = filter.getLogics(filterStr2);
-
+        var filterStr2 = "aa lt '(str)' and (bb lt '(s'' ''tr)' or bb gt 's and (s)j') and cc lt '(str)jj''";
         console.log(filterStr2);
-        //console.log(value2);
 
-        //var regExp=/((?:^|\(|\s)\w+\s(gt|lt)\s\w+(?:$|\)|\s))/g;
-        //var regExp=/(\w+\s(?:gt|lt)\s(?:'[^']*'))/g;  //   |\d.?\d
-        var regExp=/(\w+\s(?:gt|lt)\s'.*(?='\sand|'\sor)')/g;
+        filterStr2 = " 'a' 'b ''dd'' c' '''bb''' ''";
 
-        var res;
-        var brackets = [];
-        while ((res = regExp.exec(filterStr2)) != null) {
-            var exp = res[1];
+        var ss = filterStr2;
+        var ss2 = filterStr2;
+        var arr = [];
+        var str = '';
+        var isStr = false;
+        var index = 0;
+        while (index < filterStr2.length) {
+            var val = filterStr2[index];
+            if (val == '\'') {
+                var next = filterStr2[index + 1];
 
-            console.log(res);
-            brackets.push(exp);
+                if (!isStr) {
+                    str = val;
+                    isStr = true;
+                } else if (next == '\'') {
+                    str += val;
+                    str += next;
+                    index++;
+                } else {
+                    str += val;
+                    isStr = false;
+                    arr.push(str);
+                }
+            } else if (isStr) {
+                str += val;
+            }
+
+            index++;
         }
 
-       console.log(brackets);
-        //assert.equal(value, filterStr);
+        console.log('---------arr---------');
+        console.log(arr);
+
+        console.log(ss2);
+        arr.forEach(function (item, i) {
+            console.log(item);
+            ss = ss.replace(item, i.toString())
+            console.log(ss);
+        });
+
+        console.log(ss);
     });
 });
