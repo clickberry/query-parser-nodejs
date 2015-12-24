@@ -136,7 +136,7 @@ describe('Expression', function () {
         console.log(filterStr);
 
         var expression = new Expression(filterStr);
-        expression.initialize(function(err){
+        expression.initialize(function (err) {
             var value1 = expression.getExp('exp0');
             var value2 = expression.getExp('exp1');
 
@@ -148,15 +148,4 @@ describe('Expression', function () {
             assert.equal(typeof (value2.value), 'number');
         });
     });
-
-    //it('Parse incorrect operation', function () {
-    //    var filterStr = "aa er 'val'";
-    //    console.log(filterStr);
-    //
-    //    var expression=new Expression(filterStr);
-    //    expression.parse('exp0', function(err, value){
-    //        console.log(value);
-    //        assert.ok(err);
-    //    });
-    //});
 });
