@@ -11,7 +11,7 @@ describe('Brackets Test', function () {
 
     it('Without Brackets', function () {
         var str = '1 and 2 or 3';
-        var brackets=new Brackets(str);
+        var brackets = new Brackets(str);
         brackets.initialize();
         var value = brackets.getBrcTemplate();
 
@@ -20,7 +20,7 @@ describe('Brackets Test', function () {
 
     it('AND & (OR)', function () {
         var str = '1 and (2 or 3)';
-       var brackets=new Brackets(str);
+        var brackets = new Brackets(str);
         brackets.initialize();
         var value = brackets.getBrcTemplate();
 
@@ -29,7 +29,7 @@ describe('Brackets Test', function () {
 
     it('(OR) & AND & (OR)', function () {
         var str = '(1 or 2) and (2 or 3)';
-        var brackets=new Brackets(str);
+        var brackets = new Brackets(str);
         brackets.initialize();
         var value = brackets.getBrcTemplate();
 
@@ -37,26 +37,38 @@ describe('Brackets Test', function () {
     });
 
     it('Error (AND (OR))', function () {
-        var str = '(exp1 and (exp2 or exp3))'
-        var brackets=new Brackets(str);
-        assert.throws(brackets.initialize());
+        var str = '(exp1 and (exp2 or exp3))';
+        var brackets = new Brackets(str);
+        assert.throws(brackets.initialize.bind(brackets));
     });
 
     it('Error AND ((OR))', function () {
-        var str = 'exp1 and ((exp2 or exp3))'
-        var brackets=new Brackets(str);
-        assert.throws(brackets.initialize());
+        var str = 'exp1 and ((exp2 or exp3))';
+        var brackets = new Brackets(str);
+        assert.throws(brackets.initialize.bind(brackets));
     });
 
     it('Error AND (OR))', function () {
-        var str = 'exp1 and (exp2 or exp3))'
-        var brackets=new Brackets(str);
-        assert.throws(brackets.initialize());
+        var str = 'exp1 and (exp2 or exp3))';
+        var brackets = new Brackets(str);
+        assert.throws(brackets.initialize.bind(brackets));
+    });
+
+    it('Error Empty string', function () {
+        var str = '';
+        var brackets = new Brackets(str);
+        assert.throws(brackets.initialize.bind(brackets));
+    });
+
+    it('Error AND)', function () {
+        var str = 'exp1 and exp2)';
+        var brackets = new Brackets(str);
+        assert.throws(brackets.initialize.bind(brackets));
     });
 
     it('Get Brackets expressions', function () {
         var str = '(exp1 or exp2) and (exp3 or exp4 and exp5)';
-        var brackets=new Brackets(str);
+        var brackets = new Brackets(str);
         brackets.initialize();
 
         var value1 = brackets.getBrc('brc0');

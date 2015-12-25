@@ -20,7 +20,7 @@ describe('Expression Tests', function () {
 
         var expression = new Expression(filterStr);
 
-        assert.throws(expression.initialize());
+        assert.throws(expression.initialize.bind(expression));
     });
 
     it('Expression incorrect field', function () {
@@ -28,7 +28,7 @@ describe('Expression Tests', function () {
         console.log(filterStr);
 
         var expression = new Expression(filterStr);
-        assert.throws(expression.initialize());
+        assert.throws(expression.initialize.bind(expression));
     });
 
     it('Expression incorrect value', function () {
@@ -36,7 +36,15 @@ describe('Expression Tests', function () {
         console.log(filterStr);
 
         var expression = new Expression(filterStr);
-        assert.throws(expression.initialize());
+        assert.throws(expression.initialize.bind(expression));
+    });
+
+    it('Error Empty string', function () {
+        var filterStr = "";
+        console.log(filterStr);
+
+        var expression = new Expression(filterStr);
+        assert.throws(expression.initialize.bind(expression));
     });
 
     it('Expression incorrect expression', function () {
@@ -46,16 +54,16 @@ describe('Expression Tests', function () {
         var filterStr4 = "aa le 'val' and bb ge 'ss";
 
         var expression1 = new Expression(filterStr1);
-        assert.throws(expression1.initialize());
+        assert.throws(expression1.initialize.bind(expression1));
 
         var expression2 = new Expression(filterStr2);
-        assert.throws(expression2.initialize());
+        assert.throws(expression2.initialize.bind(expression2));
 
         var expression3 = new Expression(filterStr3);
-        assert.throws(expression3.initialize());
+        assert.throws(expression3.initialize.bind(expression3));
 
         var expression4 = new Expression(filterStr4);
-        assert.throws(expression4.initialize());;
+        assert.throws(expression4.initialize.bind(expression4));
     });
 
     it('Parse', function () {
