@@ -1,14 +1,12 @@
 var assert = require('assert');
 var Expression = require('../lib/expression');
 
-describe('Expression', function () {
+describe('Expression Tests', function () {
     it('Expression Template', function () {
         var filterStr = "aa lt '(str)' and (bb lt '(s'' '' tr)' or bb gt 's and (s)j') and cc lt '(str)jj'";
 
         var expression = new Expression(filterStr);
-        expression.initialize(function (err) {
-
-        });
+        expression.initialize();
         var value = expression.getExpTemplate();
         console.log(filterStr);
         console.log(value);
@@ -21,16 +19,8 @@ describe('Expression', function () {
         console.log(filterStr);
 
         var expression = new Expression(filterStr);
-        expression.initialize(function (err) {
-            assert.ok(err);
-        });
 
-        try {
-            expression.initialize();
-        }
-        catch (err) {
-            assert.ok(err);
-        }
+        assert.throws(expression.initialize());
     });
 
     it('Expression incorrect field', function () {
@@ -38,9 +28,7 @@ describe('Expression', function () {
         console.log(filterStr);
 
         var expression = new Expression(filterStr);
-        expression.initialize(function (err) {
-            assert.ok(err);
-        });
+        assert.throws(expression.initialize());
     });
 
     it('Expression incorrect value', function () {
@@ -48,9 +36,7 @@ describe('Expression', function () {
         console.log(filterStr);
 
         var expression = new Expression(filterStr);
-        expression.initialize(function (err) {
-            assert.ok(err);
-        });
+        assert.throws(expression.initialize());
     });
 
     it('Expression incorrect expression', function () {
@@ -60,24 +46,16 @@ describe('Expression', function () {
         var filterStr4 = "aa le 'val' and bb ge 'ss";
 
         var expression1 = new Expression(filterStr1);
-        expression1.initialize(function (err) {
-            assert.ok(err);
-        });
+        assert.throws(expression1.initialize());
 
         var expression2 = new Expression(filterStr2);
-        expression2.initialize(function (err) {
-            assert.ok(err);
-        });
+        assert.throws(expression2.initialize());
 
         var expression3 = new Expression(filterStr3);
-        expression3.initialize(function (err) {
-            assert.ok(err);
-        });
+        assert.throws(expression3.initialize());
 
         var expression4 = new Expression(filterStr4);
-        expression4.initialize(function (err) {
-            assert.ok(err);
-        });
+        assert.throws(expression4.initialize());;
     });
 
     it('Parse', function () {

@@ -3,7 +3,7 @@ var sinon = require('sinon');
 
 var logic = require('../lib/logic');
 
-describe('Logic Test', function () {
+describe('Logic Tests', function () {
     var exp1 = 'exp1';
     var exp2 = 'exp2';
     var exp3 = 'exp3';

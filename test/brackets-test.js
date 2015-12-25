@@ -2,7 +2,7 @@ var assert = require('assert');
 
 var Brackets = require('../lib/brackets');
 
-describe('BracketsTest', function () {
+describe('Brackets Test', function () {
     var exp1 = 'exp1';
     var exp2 = 'exp2';
     var exp3 = 'exp3';
@@ -39,31 +39,26 @@ describe('BracketsTest', function () {
     it('Error (AND (OR))', function () {
         var str = '(exp1 and (exp2 or exp3))'
         var brackets=new Brackets(str);
-        brackets.initialize(function (err) {
-            assert.ok(err);
-        });
+        assert.throws(brackets.initialize());
     });
 
     it('Error AND ((OR))', function () {
         var str = 'exp1 and ((exp2 or exp3))'
         var brackets=new Brackets(str);
-        brackets.initialize(function (err) {
-            assert.ok(err);
-        });
+        assert.throws(brackets.initialize());
     });
 
     it('Error AND (OR))', function () {
         var str = 'exp1 and (exp2 or exp3))'
         var brackets=new Brackets(str);
-        brackets.initialize(function (err) {
-            assert.ok(err);
-        });
+        assert.throws(brackets.initialize());
     });
 
     it('Get Brackets expressions', function () {
         var str = '(exp1 or exp2) and (exp3 or exp4 and exp5)';
         var brackets=new Brackets(str);
         brackets.initialize();
+
         var value1 = brackets.getBrc('brc0');
         var value2 = brackets.getBrc('brc1');
 
