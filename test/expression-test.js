@@ -122,16 +122,28 @@ describe('Expression Tests', function () {
         console.log(filterStr);
 
         var expression = new Expression(filterStr);
-        expression.initialize(function (err) {
-            var value1 = expression.getExp('exp0');
-            var value2 = expression.getExp('exp1');
+        expression.initialize();
 
-            assert.equal(err, null);
-            assert.equal(value1.value, 10);
-            assert.equal(typeof (value1.value), 'number');
+        var value1 = expression.getExp('exp0');
+        var value2 = expression.getExp('exp1');
 
-            assert.equal(value2.value, -5);
-            assert.equal(typeof (value2.value), 'number');
-        });
+        assert.equal(value1.value, 10);
+        assert.equal(typeof (value1.value), 'number');
+
+        assert.equal(value2.value, -5);
+        assert.equal(typeof (value2.value), 'number');
+    });
+
+    it('Parse with options', function () {
+        var filterStr = "field1 eq 10 and field2 lt 'asd'";
+        console.log(filterStr);
+
+        var options1 = {field1: true};
+        var options2 = {field1: true, field2: true};
+        var expression1 = new Expression(filterStr, options1);
+        var expression2 = new Expression(filterStr, options2);
+
+        assert.throws(expression1.initialize.bind(expression1));
+        expression2.initialize(); //ok
     });
 });
