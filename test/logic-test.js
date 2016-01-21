@@ -16,7 +16,6 @@ describe('Logic Tests', function () {
         stub.withArgs('1').returns(exp1);
 
         var value = logic.parse(str, stub);
-        console.log(JSON.stringify(value));
 
         assert.equal(value, exp1);
         assert.equal(value.and, undefined);
@@ -30,7 +29,6 @@ describe('Logic Tests', function () {
         stub.withArgs('2').returns(exp2);
 
         var value = logic.parse(str, stub);
-        console.log(JSON.stringify(value));
 
         assert.equal(value.and[0], exp1);
         assert.equal(value.and[1], exp2);
@@ -44,7 +42,6 @@ describe('Logic Tests', function () {
         stub.withArgs('2').returns(exp2);
 
         var value = logic.parse(str, stub);
-        console.log(JSON.stringify(value));
 
         assert.equal(value.or[0], exp1);
         assert.equal(value.or[1], exp2);
@@ -59,7 +56,6 @@ describe('Logic Tests', function () {
         stub.withArgs('3').returns(exp3);
 
         var value = logic.parse(str, stub);
-        console.log(JSON.stringify(value));
 
         assert.equal(value.or[0].and[0], exp1);
         assert.equal(value.or[0].and[1], exp2);
@@ -76,7 +72,6 @@ describe('Logic Tests', function () {
         stub.withArgs('5').returns(exp5);
 
         var value = logic.parse(str, stub);
-        console.log(JSON.stringify(value));
 
         assert.equal(value.or[0].and[0], exp1);
         assert.equal(value.or[0].and[1], exp2);

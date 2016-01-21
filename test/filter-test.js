@@ -1,15 +1,21 @@
 var assert = require('assert');
+var sinon = require('sinon');
 
 var Filter = require('../lib/filter');
+var Validator = require('../lib/validator');
+var validator = new Validator();
+
+sinon.stub(validator, 'allow');
+sinon.stub(validator, 'rename', function (fieldName) {
+    return fieldName
+});
 
 describe('Filter Tests', function () {
     it('Real values', function () {
         var filterStr = "a1 lt 'asd' and (b1 ne 'qwe' or c1 ge 123) and d1 eq 'aas(''hello!'')'";
-        var filter = new Filter(filterStr);
-        console.log(filterStr);
+        var filter = new Filter(filterStr, validator);
 
         var value = filter.parse();
-        console.log(JSON.stringify(value));
 
         var exp1 = value.and[0];
         var exp2 = value.and[1].or[0];
@@ -34,7 +40,7 @@ describe('Filter Tests', function () {
     });
 
     it('Empty filter string', function () {
-        var filter = new Filter('');
+        var filter = new Filter('', validator);
 
         var value = filter.parse();
         assert.equal(value.or, undefined);
@@ -42,7 +48,7 @@ describe('Filter Tests', function () {
     });
 
     it('Incorrect filter string', function () {
-        var filter = new Filter('sdfg');
+        var filter = new Filter('sdfg', validator);
 
         assert.throws(filter.parse.bind(filter));
     });
