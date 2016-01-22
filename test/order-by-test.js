@@ -4,39 +4,51 @@ var sinon = require('sinon');
 var OrderBy = require('../lib/order-by');
 var Validator = require('../lib/validator');
 
-var validator = new Validator();
-sinon.stub(validator, 'allow');
-sinon.stub(validator, 'rename', function (fieldName) {
-    return fieldName
-});
+function createValidator() {
+    var validator = new Validator();
+    sinon.stub(validator, 'allow');
+    sinon.stub(validator, 'duplicate');
+    sinon.stub(validator, 'rename', function (fieldName) {
+        return fieldName;
+    });
+
+    return validator;
+}
 
 describe('OrderBy Tests', function () {
     it('Parse asc & desc', function () {
         var orderByStr = 'field1 asc,field2 desc';
+        var validator = createValidator();
         var orderBy = new OrderBy(orderByStr, validator);
         var value = orderBy.parse();
 
-        assert.equal(value.field1, 'asc');
-        assert.equal(value.field2, 'desc');
+        assert.equal(value[0].field, 'field1');
+        assert.equal(value[0].direction, 'asc');
+        assert.equal(value[1].field, 'field2');
+        assert.equal(value[1].direction, 'desc');
     });
 
     it('Parse without direction string', function () {
         var orderByStr = 'field1,field2';
+        var validator = createValidator();
         var orderBy = new OrderBy(orderByStr, validator);
         var value = orderBy.parse();
 
-        assert.equal(value.field1, 'asc');
-        assert.equal(value.field2, 'asc');
+        assert.equal(value[0].direction, 'asc');
+        assert.equal(value[1].direction, 'asc');
     });
 
     it('Parse complicated string', function () {
-        var orderByStr = '  field1  desc ,  field2    desc';
+        var orderByStr = '  field1  desc ,  field2    asc';
+        var validator = createValidator();
         var orderBy = new OrderBy(orderByStr, validator);
 
         var value = orderBy.parse();
 
-        assert.equal(value.field1, 'desc');
-        assert.equal(value.field2, 'desc');
+        assert.equal(value[0].field, 'field1');
+        assert.equal(value[0].direction, 'desc');
+        assert.equal(value[1].field, 'field2');
+        assert.equal(value[1].direction, 'asc');
     });
 
     it('Parse Incorrect format Error', function () {
@@ -44,9 +56,13 @@ describe('OrderBy Tests', function () {
         var orderByStr2 = 'field1 desc field2';
         var orderByStr3 = 'field1 desc, field2 aa';
 
-        var orderBy1 = new OrderBy(orderByStr1, validator);
-        var orderBy2 = new OrderBy(orderByStr2, validator);
-        var orderBy3 = new OrderBy(orderByStr3, validator);
+        var validator1 = createValidator();
+        var validator2 = createValidator();
+        var validator3 = createValidator();
+
+        var orderBy1 = new OrderBy(orderByStr1, validator1);
+        var orderBy2 = new OrderBy(orderByStr2, validator2);
+        var orderBy3 = new OrderBy(orderByStr3, validator3);
 
         assert.throws(orderBy1.parse.bind(orderBy1), 'Error orderByStr1.');
         assert.throws(orderBy2.parse.bind(orderBy2), 'Error orderByStr2.');
@@ -64,6 +80,14 @@ describe('OrderBy Tests', function () {
         assert.throws(orderBy.parse.bind(orderBy));
     });
 
+    it('Parse with duplicate fields', function () {
+        var orderByStr = "field1, field1 desc";
+        var validator = new Validator();
+        var orderBy = new OrderBy(orderByStr, validator);
+
+        assert.throws(orderBy.parse.bind(orderBy), 'Error duplicate fields.');
+    });
+
     it('Parse with field rename', function () {
         var orderByStr = "field1 desc, field2 desc";
         var validator = new Validator();
@@ -76,7 +100,7 @@ describe('OrderBy Tests', function () {
         var orderBy = new OrderBy(orderByStr, validator);
         var value = orderBy.parse();
 
-        assert.equal(value.field1, 'desc');
-        assert.equal(value.newFieldName, 'desc');
+        assert.equal(value[0].field, 'field1');
+        assert.equal(value[1].field, 'newFieldName');
     });
 });

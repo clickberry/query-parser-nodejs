@@ -34,4 +34,11 @@ describe('Validator Tests', function () {
         assert.equal(value2, 'f2');
         assert.equal(value3, 'field3');
     });
+
+    it('Duplicate fields', function () {
+        var validator = new Validator();
+
+        validator.duplicate('field1'); //ok
+        assert.throws(validator.duplicate.bind(validator, 'field1'));
+    })
 });

@@ -12,19 +12,6 @@ sinon.stub(validator, 'rename', function (fieldName) {
     return fieldName;
 });
 
-//function createValidatorMock() {
-//    return function () {
-//        var mock = sinon.stub({
-//            allow: function () {
-//            },
-//            rename: function () {
-//            }
-//        });
-//
-//        return mock;
-//    }
-//}
-
 describe('Expression Tests', function () {
     it('Expression Template', function () {
         var filterStr = "aa lt '(str)' and (bb lt '(s'' '' tr)' or bb gt 's and (s)j') and cc lt '(str)jj'";
