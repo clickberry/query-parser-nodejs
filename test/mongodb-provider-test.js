@@ -1,5 +1,5 @@
 var assert = require('assert');
-var provider = require('../lib/provider');
+var provider = require('../lib/mongodb-provider');
 
 describe('MongoDB Provider Tests', function () {
     it('Parse empty', function () {
@@ -89,5 +89,17 @@ describe('MongoDB Provider Tests', function () {
 
         assert.equal(value.sort['field1'], 1);
         assert.equal(value.sort['field2'], -1);
+    });
+
+    it('Parse Top & Skip', function () {
+        var obj = {
+            top: {value: 11},
+            skip: {value: 22}
+        };
+
+        var value = provider.parse(obj);
+
+        assert.equal(value.limit, 11);
+        assert.equal(value.skip, 22);
     });
 });
