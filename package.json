@@ -1,6 +1,6 @@
 {
   "name": "clickberry-query-parser",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "main": "app.js",
   "description": "OData alike query parser middleware on Node.js",
   "scripts": {

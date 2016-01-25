@@ -7,6 +7,7 @@ function QueryParser(options, provider) {
     this.parse = function (req, res, next) {
         try {
             req[options.paramName] = parser(req.query, options, provider);
+            next();
         } catch (err) {
             return next(err);
         }
