@@ -48,7 +48,7 @@ describe('MongoDB Provider Tests', function () {
                         value: 12
                     }, {
                         field: 'field2',
-                        operator: 'gte',
+                        operator: 'ge',
                         value: 'abc'
                     }]
                 }, {
